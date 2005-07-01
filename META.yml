@@ -1,0 +1,17 @@
+---
+name: UNIVERSAL-isa
+version: 0.01
+author:
+  - Yuval Kogman <nothingmuch@woobling.org>
+abstract: |-
+  Hack around stupid module authors using UNIVERRSAL::isa as a
+  function when they shouldn't.
+license: perl
+requires:
+  Scalar::Util: 0
+  perl: 5.008
+provides:
+  UNIVERSAL::isa:
+    file: lib/UNIVERSAL/isa.pm
+    version: 0.01
+generated_by: Module::Build version 0.2611
