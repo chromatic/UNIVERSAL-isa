@@ -8,7 +8,7 @@ use UNIVERSAL ();
 
 use Scalar::Util qw/blessed/;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 my $orig;
 BEGIN { $orig = \&UNIVERSAL::isa };
@@ -21,8 +21,26 @@ sub import {
 }
 
 sub UNIVERSAL::isa {
-	# not an object, we can skip
-	goto &$orig unless blessed($_[0]);
+
+	# not an object or a class name, we can skip
+	unless ( blessed($_[0]) )
+	{
+		my $symtable = \%::;
+		my $found    = 1;
+
+		for my $symbol (split( '::', $_[0] ))
+		{
+			$symbol .= '::';
+			unless (exists $symtable->{$symbol})
+			{
+				$found = 0;
+				last;
+			}
+			$symtable = $symtable->{$symbol};
+		}
+
+		goto &$orig unless $found;
+	}
 
 	# 'isa' not overridden, we can skip
 	goto &$orig if (UNIVERSAL::can($_[0], "isa") == \&UNIVERSAL::isa);
@@ -46,7 +64,7 @@ __END__
 
 =head1 NAME
 
-UNIVERSAL::isa - Hack around stupid module authors using UNIVERRSAL::isa as a
+UNIVERSAL::isa - Hack around stupid module authors using UNIVERSAL::isa as a
 function when they shouldn't.
 
 =head1 SYNOPSIS
@@ -66,7 +84,11 @@ called on those objects as a method.
 
 In all other cases the real C<UNIVERSAL::isa> is just called directly.
 
-=head1 AUTHOR
+=head1 AUTHORS
+
+Autrijus Tang <autrijus@autrijus.org>
+
+chromatic <chromatic@wgz.org>
 
 Yuval Kogman <nothingmuch@woobling.org>
 
