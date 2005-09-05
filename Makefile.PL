@@ -2,12 +2,12 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PL_FILES' => {},
-          'INSTALLDIRS' => 'site',
           'NAME' => 'UNIVERSAL::isa',
           'VERSION_FROM' => 'lib/UNIVERSAL/isa.pm',
           'PREREQ_PM' => {
-                           'Scalar::Util' => 0
-                         }
+                           'Scalar::Util' => '0'
+                         },
+          'INSTALLDIRS' => 'site',
+          'PL_FILES' => {}
         )
 ;

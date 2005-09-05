@@ -1,11 +1,12 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 use strict;
-use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
+
+no warnings 'UNIVERSAL::isa';
 
 # class method
 
@@ -67,3 +68,5 @@ my $quux = Quux->new();
 ok(   isa( 'Bar', 'Foo' ), 'isa() should work on class methods too'    );
 ok( ! isa( 'Baz', 'Foo' ), '... but not for non-existant classes'      );
 ok(   isa( $quux, 'Foo' ), '... and should work on delegated wrappers' );
+
+is( scalar(isa(undef, 'Foo')), undef, 'isa on undef returns undef');
