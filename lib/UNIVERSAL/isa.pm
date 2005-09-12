@@ -10,7 +10,7 @@ use UNIVERSAL ();
 use Scalar::Util qw/blessed/;
 use warnings::register;
 
-$VERSION = "0.03";
+$VERSION = "0.04";
 
 my $orig;
 BEGIN { $orig = \&UNIVERSAL::isa };
@@ -23,7 +23,7 @@ sub import {
 }
 
 sub UNIVERSAL::isa {
-	goto &$orig unless defined $_[0];
+	goto &$orig if not defined $_[0] or length $_[0] == 0;
 
 	# not an object or a class name, we can skip
 	unless ( blessed($_[0]) )

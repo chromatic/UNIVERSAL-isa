@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -70,3 +70,9 @@ ok( ! isa( 'Baz', 'Foo' ), '... but not for non-existant classes'      );
 ok(   isa( $quux, 'Foo' ), '... and should work on delegated wrappers' );
 
 is( scalar(isa(undef, 'Foo')), undef, 'isa on undef returns undef');
+
+eval { require CGI };
+
+unless ($@) {
+	isa_ok(CGI->new(''), "CGI");
+}
