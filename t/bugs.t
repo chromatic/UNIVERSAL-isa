@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -76,3 +76,15 @@ eval { require CGI };
 unless ($@) {
 	isa_ok(CGI->new(''), "CGI");
 }
+
+# overloaded objects
+{
+	package Qibble;
+	use overload '""' => sub { die };
+	*new = \&Foo::new;
+}
+
+my $qibble = Qibble->new();
+
+ok(   isa( $qibble, 'Qibble' ), '... can test ISA on landmines');
+

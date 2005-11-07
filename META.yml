@@ -1,6 +1,6 @@
 ---
 name: UNIVERSAL-isa
-version: 0.04
+version: 0.05
 author: ~
 abstract: |-
   Hack around stupid module authors using UNIVERSAL::isa as a
@@ -12,5 +12,5 @@ requires:
 provides:
   UNIVERSAL::isa:
     file: lib/UNIVERSAL/isa.pm
-    version: 0.04
+    version: 0.05
 generated_by: Module::Build version 0.2611

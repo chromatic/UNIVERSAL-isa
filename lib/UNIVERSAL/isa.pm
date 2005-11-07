@@ -10,7 +10,7 @@ use UNIVERSAL ();
 use Scalar::Util qw/blessed/;
 use warnings::register;
 
-$VERSION = "0.04";
+$VERSION = "0.05";
 
 my $orig;
 BEGIN { $orig = \&UNIVERSAL::isa };
@@ -23,33 +23,41 @@ sub import {
 }
 
 sub UNIVERSAL::isa {
-	goto &$orig if not defined $_[0] or length $_[0] == 0;
-
 	# not an object or a class name, we can skip
 	unless ( blessed($_[0]) )
 	{
-		my $symtable = \%::;
-		my $found    = 1;
+		if (not defined $_[0] or length $_[0] == 0) {
+			# it's not a class, either... Retain orig behavior
+			# for garbage as first arg
+			goto &$orig;
+		} else {
+			# it's a string, which means it can be a class
+			my $symtable = \%::;
+			my $found    = 1;
 
-		for my $symbol (split( '::', $_[0] ))
-		{
-			$symbol .= '::';
-			unless (exists $symtable->{$symbol})
-			{
-				$found = 0;
-				last;
+			for my $symbol (split( '::', $_[0] )) {
+				$symbol .= '::';
+				unless (exists $symtable->{$symbol}) {
+					$found = 0;
+					last;
+				}
+				$symtable = $symtable->{$symbol};
 			}
-			$symtable = $symtable->{$symbol};
-		}
 
-		goto &$orig unless $found;
+			# if it's not a class then it doesn't have it's own dispatch,
+			# so we retain the original behavior
+			goto &$orig unless $found;
+		}
 	}
 
-	# 'isa' not overridden, we can skip
+	# if the object will *really* run a different 'isa' when we invoke it we
+	# need to invoke it. On the other hand if it's not overridden, we just use
+	# the original behavior
 	goto &$orig if (UNIVERSAL::can($_[0], "isa") == \&UNIVERSAL::isa);
 
-	# if we've been called from an overridden isa, we are either SUPER:: or explicitly called.
-	# in both cases the original ISA behavior is expected.
+	# if we've been called from an overridden isa that we arranged to call, we
+	# are either SUPER:: or explicitly called. in both cases the original ISA
+	# behavior is expected.
 	goto &$orig if $recursing;
 
 	# the last possible case is that 'isa' is overridden
