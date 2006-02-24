@@ -2,11 +2,12 @@
 
 use strict;
 
-use Test::More tests => 12;
+use Test::More tests => 18;
 
 BEGIN { use_ok("UNIVERSAL::isa", "isa") };
 
-no warnings "UNIVERSAL::isa";
+# no warnings "UNIVERSAL::isa";
+use warnings;
 
 {
 	package Foo;
@@ -51,4 +52,14 @@ ok(isa($g, "Dung"), "it's dung");
 ok(isa($x, "Baz"), "baz is itself");
 ok(!isa($x, "Crap"), "baz isn't crap");
 ok(isa($x, "Dung"), "it's dung");
+{
+	use warnings 'UNIVERSAL::isa';
+	no warnings 'once';
 
+	ok( isa( {},     'HASH' ),      'hash reference isa HASH'     );
+	ok( isa( [],     'ARRAY' ),     'array reference isa ARRAY'   );
+	ok( isa( sub {}, 'CODE' ),      'code reference isa CODE'     );
+	ok( isa( \my $a, 'SCALAR' ),    'scalar reference isa SCALAR' );
+	ok( isa( qr//, 'Regexp' ),      'regexp reference isa Regexp' );
+	ok( isa( \local *FOO, 'GLOB' ), 'glob reference isa GLOB'     );
+}

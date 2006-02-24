@@ -1,8 +1,8 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -30,6 +30,24 @@ no warnings 'UNIVERSAL::isa';
 	sub isa
 	{
 		return 1 if $_[1] eq 'Foo';
+	}
+}
+
+# really delegates calls to Foo
+{
+	package FooProxy;
+
+	sub new
+	{
+		my $class = shift;
+		my $foo   = Foo->new( @_ );
+		bless \$foo, $class;
+	}
+
+	sub can
+	{
+		my $self = shift;
+		return $$self->can( @_ );
 	}
 }
 
@@ -81,6 +99,7 @@ unless ($@) {
 {
 	package Qibble;
 	use overload '""' => sub { die };
+	no warnings 'once';
 	*new = \&Foo::new;
 }
 
@@ -88,3 +107,5 @@ my $qibble = Qibble->new();
 
 ok(   isa( $qibble, 'Qibble' ), '... can test ISA on landmines');
 
+my $proxy = FooProxy->new();
+isa_ok( $proxy, 'Foo' );

@@ -10,67 +10,80 @@ use UNIVERSAL ();
 use Scalar::Util qw/blessed/;
 use warnings::register;
 
-$VERSION = "0.05";
+$VERSION = "0.06";
 
 my $orig;
 BEGIN { $orig = \&UNIVERSAL::isa };
 
 no warnings 'redefine';
 
-sub import {
+sub import
+{
 	no strict 'refs';
 	*{caller() . "::isa"} = \&UNIVERSAL::isa if (@_ > 1 and $_[1] eq "isa");
 }
 
-sub UNIVERSAL::isa {
-	# not an object or a class name, we can skip
-	unless ( blessed($_[0]) )
+sub UNIVERSAL::isa
+{
+	goto &$orig if $recursing;
+	my $type = invocant_type( @_ );
+	$type->( @_ );
+}
+
+sub invocant_type
+{
+	my $invocant = shift;
+	return \&nonsense          unless defined( $invocant );
+	return \&object_or_class   if blessed( $invocant );
+	return \&reference         if ref( $invocant );
+	return \&nonsense          unless $invocant;
+	return \&object_or_class;
+}
+
+sub nonsense
+{
+	report_warning( 'on invalid invocant' );
+	return;
+}
+
+sub object_or_class
+{
+	report_warning();
+
+	local $@;
+	local $recursing = 1;
+
+	if ( my $override = eval { $_[0]->can( 'isa' ) } )
 	{
-		if (not defined $_[0] or length $_[0] == 0) {
-			# it's not a class, either... Retain orig behavior
-			# for garbage as first arg
-			goto &$orig;
-		} else {
-			# it's a string, which means it can be a class
-			my $symtable = \%::;
-			my $found    = 1;
-
-			for my $symbol (split( '::', $_[0] )) {
-				$symbol .= '::';
-				unless (exists $symtable->{$symbol}) {
-					$found = 0;
-					last;
-				}
-				$symtable = $symtable->{$symbol};
-			}
-
-			# if it's not a class then it doesn't have it's own dispatch,
-			# so we retain the original behavior
-			goto &$orig unless $found;
+		unless ( $override == \&UNIVERSAL::isa )
+		{
+			my $obj = shift;
+			return $obj->$override( @_ );
 		}
 	}
 
-	# if the object will *really* run a different 'isa' when we invoke it we
-	# need to invoke it. On the other hand if it's not overridden, we just use
-	# the original behavior
-	goto &$orig if (UNIVERSAL::can($_[0], "isa") == \&UNIVERSAL::isa);
+	goto &$orig;
+}
 
-	# if we've been called from an overridden isa that we arranged to call, we
-	# are either SUPER:: or explicitly called. in both cases the original ISA
-	# behavior is expected.
-	goto &$orig if $recursing;
+sub reference
+{
+	report_warning( "Did you mean to use Scalar::Util::reftype() instead?" );
+	goto &$orig;
+}
 
-	# the last possible case is that 'isa' is overridden
-	local $recursing = 1;
-	my $obj = shift;
+sub report_warning
+{
+	my $extra   = shift;
+	$extra      = $extra ? " ($extra)" : '';
 
-	if (warnings::enabled()) {
-		my $calling_sub  = ( caller( 1 ) )[3] || '';
-		warnings::warn( "Called UNIVERSAL::isa() as a function, not a method" )
-			if $calling_sub !~ /::isa$/;
+	if (warnings::enabled())
+	{
+		my $calling_sub  = ( caller( 2 ) )[3] || '';
+		return if $calling_sub =~ /::isa$/;
+		warnings::warn(
+			"Called UNIVERSAL::isa() as a function, not a method$extra"
+		)
 	}
-
-	return $obj->isa(@_);
 }
 
 __PACKAGE__;
@@ -81,12 +94,16 @@ __END__
 
 =head1 NAME
 
-UNIVERSAL::isa - Hack around stupid module authors using UNIVERSAL::isa as a
-function when they shouldn't.
+UNIVERSAL::isa - Attempt to recover from people calling UNIVERSAL::isa as a
+function
 
 =head1 SYNOPSIS
 
+	# from the shell
 	echo 'export PERL5OPT=-MUNIVERSAL::isa' >> /etc/profile
+
+	# within your program
+	use UNIVERSAL::isa;
 
 =head1 DESCRIPTION
 
@@ -95,16 +112,16 @@ L<Test::MockObject> dies. Normally, the kittens would be helpless, but if they
 use L<UNIVERSAL::isa> (the module whose docs you are reading), the kittens can
 live long and prosper.
 
-This module replaces C<UNIVERSAL::isa> with a version that makes sure that if
-it's called as a function on objects which override C<isa>, C<isa> will be
-called on those objects as a method.
+This module replaces C<UNIVERSAL::isa> with a version that makes sure that,
+when called as a function on objects which override C<isa>, C<isa> will call
+the appropriate method on those objects
 
-In all other cases the real C<UNIVERSAL::isa> is just called directly.
+In all other cases, the real C<UNIVERSAL::isa> gets called directly.
 
 =head1 WARNINGS
 
-If the lexical warnings pragma is available, a warning will be emitted for each
-naughty invocation of C<UNIVERSAL::isa>. These warnings can be silenced by
+If the lexical warnings pragma is available, this module will emit a warning
+for each naughty invocation of C<UNIVERSAL::isa>. Silence these warnings by
 saying:
 
 	no warnings 'UNIVERSAL::isa';
@@ -114,6 +131,9 @@ in the lexical scope of the naughty code.
 =head1 SEE ALSO
 
 L<UNIVERSAL::can> for a more mature discussion of the problem at hand.
+
+L<Test::MockObject> for one example of a module that really needs to override
+C<isa()>.
 
 =head1 AUTHORS
 
@@ -125,8 +145,6 @@ Yuval Kogman <nothingmuch@woobling.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Same as perl, blah blah blah, (c) 2005
+Same as Perl, (c) 2005 - 2006.
 
 =cut
-
-

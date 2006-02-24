@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.50.
+signed via the Module::Signature module, version 0.53.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,17 +14,19 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 c90c2476bc82d060488d8ae50896dcda8ee4221f Build.PL
-SHA1 cb3ff2dc987a0b6708a4760215065b3c08d4388e MANIFEST
-SHA1 ccfb803de59cdb939f72ed8446b93f31234a6c3e META.yml
+SHA1 b22373febb9100af8545be3ea75de041ac1a68d9 Build.PL
+SHA1 3b015afbb2eea645af7325bef88d432d78dea84b Changes
+SHA1 6906d5429c1c587b0a367ff859221391ae737144 MANIFEST
+SHA1 a7823dbd767289a81802df7eb1cdfbdc09093d4e META.yml
 SHA1 5cf0c1336517270a31f2b893775bb284130b672e Makefile.PL
-SHA1 9421cc2b7de82297dbce443340c41f6c23266132 lib/UNIVERSAL/isa.pm
-SHA1 8497ba6abe4951ce5358a9bf4b57e908da7c37de t/basic.t
-SHA1 a61071ee2a4eda3a4f21442309bbc5e11c23cb38 t/bugs.t
+SHA1 8a07646b7947303fa906328af862b869eaec2df3 README
+SHA1 b10e64eb47b3a51316d5495da37e1e25cf6faadb lib/UNIVERSAL/isa.pm
+SHA1 0c87875d0c75e64fbb8cd0145e106368807ea182 t/basic.t
+SHA1 b0901afa698b6109ecc70994e66c1f0b54e56b01 t/bugs.t
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (Darwin)
+Version: GnuPG v1.4.2.1 (GNU/Linux)
 
-iD8DBQFDbw2fVCwRwOvSdBgRAjFQAJ9HovcUB2yh0U3eAd4T+ofd/EBFzgCdHuL2
-699rrBtTHAHFkWR2ZZ8wzVo=
-=HNr3
+iD8DBQFD/q92qX/z6NoU2UoRAt6yAJ9d48RZsvk98HBNg7YCxre25E1ubACcD5j6
+3rbH0qgUMhtJdjJmGChmcyE=
+=eP1K
 -----END PGP SIGNATURE-----

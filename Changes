@@ -1,0 +1,20 @@
+Changes for UNIVERSAL::isa
+--------------------------
+
+0.06  Fri Feb 24 06:47:14 UTC 2006
+	- allowed for overridden can()
+	- allowed backwards-compatible use of isa() to check reftype
+	- added Changes and README files
+	- revised internal code for readability
+	- improved documentation slightly
+
+0.05  Nov 07 2005
+
+0.04  Sep 11 2005
+
+0.03  Sep 05 2005
+
+0.02  Jul 03 2005
+
+0.01  Jun 30 2005
+	- initial release
