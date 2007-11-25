@@ -1,31 +1,34 @@
 UNIVERSAL::isa
 --------------
 
-Version 0.06 - Fri Feb 24 06:57:52 UTC 2006
+Version 1.00_00 - Sun Nov 25 00:15:20 UTC 2007
 
 Attempt to recover from people calling UNIVERSAL::isa as a function
 
-	# from the shell
-	echo 'export PERL5OPT=-MUNIVERSAL::isa' >> /etc/profile
+    # from the shell
+    echo 'export PERL5OPT=-MUNIVERSAL::isa' >> /etc/profile
 
-	# within your program
-	use UNIVERSAL::isa;
+    # within your program
+    use UNIVERSAL::isa;
+
+    # verbose reporting
+    use UNIVERSAL::isa 'verbose';
 
 INSTALLATION
 
-	$ perl Build.PL
-	$ perl ./Build
-	$ perl ./Build test
-	$ sudo perl ./Build install
+    $ perl Build.PL
+    $ perl ./Build
+    $ perl ./Build test
+    $ sudo perl ./Build install
 
 APOLOGIA
 
-	Whenever you use "isa" in UNIVERSAL as a function, a kitten using
+    Whenever you use "isa" in UNIVERSAL as a function, a kitten using
 Test::MockObject dies. Normally, the kittens would be helpless, but if they use
 UNIVERSAL::isa (the module whose docs you are reading), the kittens can live
 long and prosper.
 
-	This module replaces "UNIVERSAL::isa" with a version that makes sure that,
+    This module replaces "UNIVERSAL::isa" with a version that makes sure that,
 when called as a function on objects which override "isa", "isa" will call the
 appropriate method on those objects
 
@@ -39,4 +42,4 @@ AUTHORS
     Yuval Kogman <nothingmuch@woobling.org>
 
 COPYRIGHT & LICENSE
-    Same as Perl, (c) 2005 - 2006.
+    Same as Perl, (c) 2005 - 2007.

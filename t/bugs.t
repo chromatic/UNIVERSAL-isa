@@ -1,8 +1,8 @@
-#!/usr/bin/perl
+#! perl
 
 use strict;
 
-use Test::More tests => 8;
+use Test::More 'no_plan'; # tests => 8;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -11,74 +11,80 @@ no warnings 'UNIVERSAL::isa';
 # class method
 
 {
-	package Foo;
+    package Foo;
 
-	sub new
-	{
-		bless \(my $self), shift;
-	}
+    sub new
+    {
+        bless \(my $self), shift;
+    }
 
-	sub isa {
-		1;
-	}
+    sub isa {
+        1;
+    }
 }
 
 # delegates calls to Foo
 {
-	package Bar;
+    package Bar;
 
-	sub isa
-	{
-		return 1 if $_[1] eq 'Foo';
-	}
+    sub isa
+    {
+        return 1 if $_[1] eq 'Foo';
+    }
 }
 
 # really delegates calls to Foo
 {
-	package FooProxy;
+    package FooProxy;
 
-	sub new
-	{
-		my $class = shift;
-		my $foo   = Foo->new( @_ );
-		bless \$foo, $class;
-	}
+    sub new
+    {
+        my $class = shift;
+        my $foo   = Foo->new( @_ );
+        bless \$foo, $class;
+    }
 
-	sub can
-	{
-		my $self = shift;
-		return $$self->can( @_ );
-	}
+    sub can
+    {
+        my $self = shift;
+        return $$self->can( @_ );
+    }
+
+    sub isa
+    {
+        my $self = shift;
+        $$self->can( 'isa' )->( @_ );
+    }
 }
 
 # wraps a Foo object
 {
-	package Quux;
+    package Quux;
 
-	use vars '$AUTOLOAD';
-	sub isa;
+    use vars '$AUTOLOAD';
+    sub isa;
 
-	sub new
-	{
-		my $class = shift;
-		my $foo   = Foo->new();
-		bless \$foo, $class;
-	}
+    sub new
+    {
+        my $class = shift;
+        my $foo   = Foo->new();
+        bless \$foo, $class;
+    }
 
-	sub can
-	{
-		my $self = shift;
-		return $$self->can( @_ );
-	}
+    sub can
+    {
+        my $self = shift;
+        return $$self->can( @_ );
+    }
 
-	sub AUTOLOAD
-	{
-		my $self     = shift;
-		my ($method) = $AUTOLOAD =~ /::(\w+)$/;
-		$$self->$method( @_ );
-	}
+    sub AUTOLOAD
+    {
+        my $self     = shift;
+        my ($method) = $AUTOLOAD =~ /::(\w+)$/;
+        $$self->$method( @_ );
+    }
 
-	sub DESTROY {}
+    sub DESTROY {}
 }
 
 my $quux = Quux->new();
@@ -91,16 +97,14 @@ is( scalar(isa(undef, 'Foo')), undef, 'isa on undef returns undef');
 
 eval { require CGI };
 
-unless ($@) {
-	isa_ok(CGI->new(''), "CGI");
-}
+isa_ok( CGI->new(''), 'CGI' ) unless $@;
 
 # overloaded objects
 {
-	package Qibble;
-	use overload '""' => sub { die };
-	no warnings 'once';
-	*new = \&Foo::new;
+    package Qibble;
+    use overload '""' => sub { die };
+    no warnings 'once';
+    *new = \&Foo::new;
 }
 
 my $qibble = Qibble->new();
@@ -109,3 +113,14 @@ ok(   isa( $qibble, 'Qibble' ), '... can test ISA on landmines');
 
 my $proxy = FooProxy->new();
 isa_ok( $proxy, 'Foo' );
+
+# valid use of isa() as static method on undefined class
+{
+    my $warnings         = '';
+    local $SIG{__WARN__} = sub { $warnings .= shift };
+    use warnings 'UNIVERSAL::isa';
+
+    ok( ! UnloadedClass->isa( 'UNIVERSAL' ),
+        'unloaded class should not inherit from UNIVERSAL' );
+    is( $warnings, '', '... and should not warn' );
+}

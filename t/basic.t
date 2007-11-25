@@ -1,65 +1,156 @@
-#!/usr/bin/perl -w
+#! perl
 
 use strict;
 
-use Test::More tests => 18;
+use Test::More tests => 47;
 
 BEGIN { use_ok("UNIVERSAL::isa", "isa") };
 
-# no warnings "UNIVERSAL::isa";
 use warnings;
 
 {
-	package Foo;
+    package Foo;
 
-	sub isa {
-		1;
-	}
+    sub isa { 1 }
 }
 
 {
-	package Bar;
+    package Bar;
 }
 
 {
-	package Gorch;
-	sub isa {
-		my $self = shift;
-		my $class = shift;
-		($class eq "Dung") || $self->SUPER::isa($class);
-	}
+    package Gorch;
+    sub isa
+    {
+        my ($self, $class) = @_;
+        $self->SUPER::isa($class) unless $class eq "Glab";
+    }
 }
 
 {
-	package Baz;
-	sub isa {
-		my $self = shift;
-		my $class = shift;
-		($class eq "Dung") || UNIVERSAL::isa($self, $class);
-	}
+    package Baz;
+    sub isa
+    {
+        my ($self, $class) = @_;
+        UNIVERSAL::isa($self, $class) unless $class eq "Glab";
+    }
 }
 
-my ($f,$b,$g,$x) = map { bless [], $_ } qw/Foo Bar Gorch Baz/;
+my ($f, $b, $g, $x) = map { bless [], $_ } qw( Foo Bar Gorch Baz );
 
-ok(isa([], "ARRAY"), "10 is a scalar");
-ok(isa($b, "Bar"), "bar is a bar");
-ok(isa($f, "Foo"), "foo is a foo");
-ok(!isa($b, "Crap"), "bar isn't full of crap");
-ok(isa($f, "Crap"), "foo is full of crap");
-ok(isa($g, "Gorch"), "gorch is itself");
-ok(!isa($g, "Crap"), "gorch isn't crap");
-ok(isa($g, "Dung"), "it's dung");
-ok(isa($x, "Baz"), "baz is itself");
-ok(!isa($x, "Crap"), "baz isn't crap");
-ok(isa($x, "Dung"), "it's dung");
 {
-	use warnings 'UNIVERSAL::isa';
-	no warnings 'once';
 
-	ok( isa( {},     'HASH' ),      'hash reference isa HASH'     );
-	ok( isa( [],     'ARRAY' ),     'array reference isa ARRAY'   );
-	ok( isa( sub {}, 'CODE' ),      'code reference isa CODE'     );
-	ok( isa( \my $a, 'SCALAR' ),    'scalar reference isa SCALAR' );
-	ok( isa( qr//, 'Regexp' ),      'regexp reference isa Regexp' );
-	ok( isa( \local *FOO, 'GLOB' ), 'glob reference isa GLOB'     );
+    my $warning = '';
+    local $SIG{__WARN__} = sub { $warning = shift };
+
+    ok(  isa( [], 'ARRAY' ), '[] is an array ref' );
+    is( $warning, '', 'not warning by default' );
+
+    $warning = '';
+    ok(  isa( $b, 'Bar'   ), 'bar is a Bar'       );
+    is( $warning, '', 'not warning by default' );
+
+    $warning = '';
+    ok(  isa( $f, 'Foo'   ), 'foo is a Foo'       );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok( !isa( $b, 'Zlap'  ), 'bar is not Zlap'    );
+    is( $warning, '', 'not warning by default' );
+
+    $warning = '';
+    ok(  isa( $f, 'Zlap'  ), 'neither is Foo'     );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok(  isa( $g, 'Gorch' ), 'Gorch is itself'    );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok( !isa( $g, 'Zlap'  ), 'gorch is not Zlap'  );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok(  isa( $g, 'Glab'  ), '... it is dung'     );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok(  isa( $x, 'Baz'   ), 'Baz is itself'      );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok( !isa( $x, 'Zlap'  ), 'baz is not Zlap'    );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+
+    $warning = '';
+    ok(  isa( $x, 'Glab'  ), 'it is dung'         );
+    like( $warning, qr/as a function.+basic.t/, '... warning by default' );
+}
+
+{
+    use warnings 'UNIVERSAL::isa';
+
+    my $warning = '';
+    local $SIG{__WARN__} = sub { $warning = shift };
+
+    $warning = '';
+    ok( isa( {},     'HASH' ),   'hash reference isa HASH'       );
+    is( $warning,    '',         '... and no warning by default' );
+
+    $warning = '';
+    ok( isa( [],     'ARRAY' ),  'array reference isa ARRAY'     );
+    is( $warning,    '',         '... and no warning by default' );
+
+    $warning = '';
+    ok( isa( sub {}, 'CODE' ),   'code reference isa CODE'       );
+    is( $warning,    '',         '... and no warning by default' );
+
+    $warning = '';
+    ok( isa( \my $a, 'SCALAR' ), 'scalar reference isa SCALAR'   );
+    is( $warning,    '',         '... and no warning by default' );
+
+    $warning = '';
+    ok( isa( qr//,   'Regexp' ), 'regexp reference isa Regexp'   );
+    is( $warning,    '',         '... and no warning by default' );
+
+    $warning = '';
+    ok( isa( \local *FOO, 'GLOB' ), 'glob reference isa GLOB'     );
+    is( $warning, '', '... and no warning by default' );
+}
+
+{
+    use warnings 'UNIVERSAL::isa';
+    UNIVERSAL::isa::->import( 'verbose' );
+
+    my $warning = '';
+    local $SIG{__WARN__} = sub { $warning = shift };
+
+    ok( isa( {},     'HASH' ),      'hash reference isa HASH'     );
+    like( $warning, qr/Called.+as a function.+reftyp.+basic.t/,
+        '... warning in verbose mode' );
+
+    $warning = '';
+    ok( isa( [],     'ARRAY' ),     'array reference isa ARRAY'   );
+    like( $warning, qr/Called.+as a function.+reftyp.+basic.t/,
+        '... warning in verbose mode' );
+
+    $warning = '';
+    ok( isa( sub {}, 'CODE' ),      'code reference isa CODE'     );
+    like( $warning, qr/Called.+as a function.+reftyp.+basic.t/,
+        '... warning in verbose mode' );
+
+    $warning = '';
+    ok( isa( \my $a, 'SCALAR' ),    'scalar reference isa SCALAR' );
+    like( $warning, qr/Called.+as a function.+reftyp.+basic.t/,
+        '... warning in verbose mode' );
+
+    $warning = '';
+    ok( isa( qr//, 'Regexp' ),      'regexp reference isa Regexp' );
+    like( $warning, qr/Called.+as a functio.+basic.t/,
+        '... warning in verbose mode' );
+
+    $warning = '';
+    ok( isa( \local *FOO, 'GLOB' ), 'glob reference isa GLOB'     );
+    like( $warning, qr/Called.+as a function.+reftyp.+basic.t/,
+        '... warning in verbose mode' );
 }
