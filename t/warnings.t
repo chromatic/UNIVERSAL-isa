@@ -1,10 +1,11 @@
 #! perl
 
 use strict;
+use warnings;
 
-use Test::More 'no_plan'; # tests => 18;
+use Test::More tests => 9;
 
-BEGIN { use_ok("UNIVERSAL::isa", "isa") };
+BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
 use warnings 'UNIVERSAL::isa';
 

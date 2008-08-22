@@ -1,8 +1,8 @@
 ---
 name: UNIVERSAL-isa
-version: 1.00_00
+version: 1.01
 author:
-  - 'Autrijus Tang <autrijus@autrijus.org>'
+  - 'Audrey Tang <cpan@audreyt.org>'
   - 'chromatic <chromatic@wgz.org>'
   - 'Yuval Kogman <nothingmuch@woobling.org>'
 abstract: |-
@@ -13,11 +13,11 @@ resources:
   license: http://dev.perl.org/licenses/
 requires:
   Scalar::Util: 0
-  perl: 5.006
+  perl: 5.6.2
 provides:
   UNIVERSAL::isa:
     file: lib/UNIVERSAL/isa.pm
-    version: 1.00_00
+    version: 1.01
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

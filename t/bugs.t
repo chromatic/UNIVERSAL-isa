@@ -1,8 +1,9 @@
 #! perl
 
 use strict;
+use warnings;
 
-use Test::More 'no_plan'; # tests => 8;
+use Test::More tests => 10;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -18,9 +19,7 @@ no warnings 'UNIVERSAL::isa';
         bless \(my $self), shift;
     }
 
-    sub isa {
-        1;
-    }
+    sub isa { 1 }
 }
 
 # delegates calls to Foo

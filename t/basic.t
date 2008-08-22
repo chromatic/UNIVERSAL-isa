@@ -1,10 +1,11 @@
 #! perl
 
 use strict;
+use warnings;
 
 use Test::More tests => 47;
 
-BEGIN { use_ok("UNIVERSAL::isa", "isa") };
+BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
 use warnings;
 
@@ -23,7 +24,7 @@ use warnings;
     sub isa
     {
         my ($self, $class) = @_;
-        $self->SUPER::isa($class) unless $class eq "Glab";
+        $self->SUPER::isa($class) unless $class eq 'Glab';
     }
 }
 
@@ -32,7 +33,7 @@ use warnings;
     sub isa
     {
         my ($self, $class) = @_;
-        UNIVERSAL::isa($self, $class) unless $class eq "Glab";
+        UNIVERSAL::isa($self, $class) unless $class eq 'Glab';
     }
 }
 

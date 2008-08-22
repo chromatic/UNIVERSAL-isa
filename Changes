@@ -1,12 +1,20 @@
 Changes for UNIVERSAL::isa
 --------------------------
 
+1.01  Aug 22 05:29:44 UTC 2008
+    - minor packaging housekeeping
+    - report only CURRENT ACTUAL BUGS THAT WILL BREAK YOUR CODE AS IT EXISTS
+      RIGHT NOW SO FIX THEM PLEASE rather than latent bugs that will break your
+      code in the future, at least by default
+    - added the verbose flag to fix you about all bugs regarding the use of
+      isa() as a function
+
 0.06  Fri Feb 24 06:47:14 UTC 2006
-	- allowed for overridden can()
-	- allowed backwards-compatible use of isa() to check reftype
-	- added Changes and README files
-	- revised internal code for readability
-	- improved documentation slightly
+    - allowed for overridden can()
+    - allowed backwards-compatible use of isa() to check reftype
+    - added Changes and README files
+    - revised internal code for readability
+    - improved documentation slightly
 
 0.05  Nov 07 2005
 
@@ -17,4 +25,4 @@ Changes for UNIVERSAL::isa
 0.02  Jul 03 2005
 
 0.01  Jun 30 2005
-	- initial release
+    - initial release

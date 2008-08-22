@@ -8,7 +8,7 @@ use UNIVERSAL ();
 use Scalar::Util 'blessed';
 use warnings::register;
 
-$VERSION = '1.00_00';
+$VERSION = '1.01';
 
 my ( $orig, $verbose_warning );
 
@@ -73,7 +73,7 @@ sub object_or_class
 
 sub reference
 {
-    report_warning("Did you mean to use Scalar::Util::reftype() instead?")
+    report_warning('Did you mean to use Scalar::Util::reftype() instead?')
         if $verbose_warning;
     goto &$orig;
 }
@@ -137,27 +137,31 @@ saying:
 
 in the lexical scope of the naughty code.
 
-In version 1.00, warnings only appear when naughty code calls UNIVERSAL::isa()
-as a function on an invocant for which there is an overridden isa().  These are
-really truly bugs, and you should fix them rather than relying on this module
-to find them.
+After version 1.00, warnings only appear when naughty code calls
+UNIVERSAL::isa() as a function on an invocant for which there is an overridden
+isa().  These are really truly I<active> bugs, and you should fix them rather
+than relying on this module to find them.
 
 To get warnings for all potentially dangerous uses of UNIVERSAL::isa() as a
-function, not a method (that is, for I<all> uses of the method as a function),
+function, not a method (that is, for I<all> uses of the method as a function,
+which are latent bugs, if not bugs that will break your code as it exists now),
 pass the C<verbose> flag when using the module.  This can generate many extra
 warnings, but they're more specific as to the actual wrong practice and they
 usually suggest proper fixes.
 
 =head1 SEE ALSO
 
-L<UNIVERSAL::can> for a more mature discussion of the problem at hand.
+L<UNIVERSAL::can> for another discussion of the problem at hand.
 
 L<Test::MockObject> for one example of a module that really needs to override
 C<isa()>.
 
+Any decent explanation of OO to understand why calling methods as functions is
+a staggeringly bad idea.
+
 =head1 AUTHORS
 
-Autrijus Tang <autrijus@autrijus.org>
+Audrey Tang <cpan@audreyt.org>
 
 chromatic <chromatic@wgz.org>
 
@@ -165,6 +169,6 @@ Yuval Kogman <nothingmuch@woobling.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Same as Perl, (c) 2005 - 2007.
+Artistic Licence 2.0, (c) 2005 - 2008.
 
 =cut

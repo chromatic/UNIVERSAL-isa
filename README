@@ -1,7 +1,7 @@
 UNIVERSAL::isa
 --------------
 
-Version 1.00_00 - Sun Nov 25 00:15:20 UTC 2007
+Version 1.01 - Fri Aug 22 05:29:08 UTC 2008
 
 Attempt to recover from people calling UNIVERSAL::isa as a function
 
@@ -35,11 +35,12 @@ appropriate method on those objects
     In all other cases, the real "UNIVERSAL::isa" gets called directly.
 
 AUTHORS
-    Autrijus Tang <autrijus@autrijus.org>
+    Audrey Tang <cpan@audreyt.org>
 
     chromatic <chromatic@wgz.org>
 
     Yuval Kogman <nothingmuch@woobling.org>
 
 COPYRIGHT & LICENSE
-    Same as Perl, (c) 2005 - 2007.
+
+    Artistic License 2.0, (c) 2005 - 2008.
