@@ -11,7 +11,11 @@ Module::Build->new(
     module_name => 'UNIVERSAL::isa',
     license     => 'perl',
     requires    => {
-        'perl' => '5.6.2',
+        'perl'         => '5.6.2',
         'Scalar::Util' => 0,
     },
+    build_requires => {
+        'perl'          => '5.6.2',
+        'Module::Build' => '0.31',
+    }
 )->create_build_script;

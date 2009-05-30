@@ -1,6 +1,6 @@
 ---
 name: UNIVERSAL-isa
-version: 1.01
+version: 1.02
 author:
   - 'Audrey Tang <cpan@audreyt.org>'
   - 'chromatic <chromatic@wgz.org>'
@@ -14,11 +14,14 @@ resources:
 requires:
   Scalar::Util: 0
   perl: 5.6.2
+build_requires:
+  Module::Build: 0.31
+  perl: 5.6.2
 provides:
   UNIVERSAL::isa:
     file: lib/UNIVERSAL/isa.pm
-    version: 1.01
-generated_by: Module::Build version 0.2808
+    version: 1.02
+generated_by: Module::Build version 0.33
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4

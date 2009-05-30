@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
 
@@ -94,9 +94,12 @@ ok(   isa( $quux, 'Foo' ), '... and should work on delegated wrappers' );
 
 is( scalar(isa(undef, 'Foo')), undef, 'isa on undef returns undef');
 
-eval { require CGI };
+SKIP: {
+    eval { require CGI };
+    skip( 'CGI not installed; RT #19671', 1 ) if $@;
 
-isa_ok( CGI->new(''), 'CGI' ) unless $@;
+    isa_ok( CGI->new(''), 'CGI' );
+}
 
 # overloaded objects
 {
@@ -114,12 +117,29 @@ my $proxy = FooProxy->new();
 isa_ok( $proxy, 'Foo' );
 
 # valid use of isa() as static method on undefined class
+TODO: {
+    my $warnings         = '';
+    local $SIG{__WARN__} = sub { $warnings .= shift };
+    use warnings 'UNIVERSAL::isa';
+
+    local $TODO = 'Apparently broken in 5.6.x' if $] < 5.007;
+
+    ok( ! UnloadedClass->isa( 'UNIVERSAL' ),
+        'unloaded class should not inherit from UNIVERSAL' );
+    is( $warnings, '', '... and should not warn' );
+}
+
+# on an unloaded class
 {
     my $warnings         = '';
     local $SIG{__WARN__} = sub { $warnings .= shift };
     use warnings 'UNIVERSAL::isa';
 
-    ok( ! UnloadedClass->isa( 'UNIVERSAL' ),
-        'unloaded class should not inherit from UNIVERSAL' );
-    is( $warnings, '', '... and should not warn' );
+    UNIVERSAL::isa("Foo", "Bar");
+    like( $warnings, qr/Called UNIVERSAL::isa/,
+        'warning on unloaded class given class (RT #24822)' );
+
+    UNIVERSAL::isa(bless({}, "Foo"), "Bar");
+    like( $warnings, qr/Called UNIVERSAL::isa/,
+        'warning on unloaded class given object (RT #24882)' );
 }

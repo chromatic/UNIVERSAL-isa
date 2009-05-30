@@ -1,7 +1,7 @@
 UNIVERSAL::isa
 --------------
 
-Version 1.01 - Fri Aug 22 05:29:08 UTC 2008
+Version 1.02 - Sat May 30 19:44:24 UTC 2009
 
 Attempt to recover from people calling UNIVERSAL::isa as a function
 
@@ -43,4 +43,4 @@ AUTHORS
 
 COPYRIGHT & LICENSE
 
-    Artistic License 2.0, (c) 2005 - 2008.
+    Artistic License 2.0, (c) 2005 - 2009.

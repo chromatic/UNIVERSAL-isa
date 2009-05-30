@@ -8,7 +8,7 @@ use UNIVERSAL ();
 use Scalar::Util 'blessed';
 use warnings::register;
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 my ( $orig, $verbose_warning );
 
@@ -169,6 +169,6 @@ Yuval Kogman <nothingmuch@woobling.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Artistic Licence 2.0, (c) 2005 - 2008.
+Artistic Licence 2.0, (c) 2005 - 2009.
 
 =cut
