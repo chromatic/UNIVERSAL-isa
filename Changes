@@ -1,6 +1,9 @@
 Changes for UNIVERSAL::isa
 --------------------------
 
+1.03  Mon Jun 22 20:42:36 UTC 2009
+    - improved packaging (Module::Build is now a config_requires dependency)
+
 1.01  Aug 22 05:29:44 UTC 2008
     - minor packaging housekeeping
     - report only CURRENT ACTUAL BUGS THAT WILL BREAK YOUR CODE AS IT EXISTS

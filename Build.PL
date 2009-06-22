@@ -14,8 +14,8 @@ Module::Build->new(
         'perl'         => '5.6.2',
         'Scalar::Util' => 0,
     },
-    build_requires => {
+    config_requires => {
         'perl'          => '5.6.2',
-        'Module::Build' => '0.31',
+        'Module::Build' => '0.33',
     }
 )->create_build_script;
