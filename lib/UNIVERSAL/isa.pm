@@ -1,14 +1,16 @@
 package UNIVERSAL::isa;
+# ABSTRACT: Attempt to recover from people calling UNIVERSAL::isa as a function
 
 use strict;
-use vars qw( $VERSION $recursing );
+use warnings;
+use 5.6.2;
+
+use vars qw( $recursing );
 
 use UNIVERSAL ();
 
 use Scalar::Util 'blessed';
 use warnings::register;
-
-$VERSION = '1.03';
 
 my ( $orig, $verbose_warning );
 
@@ -100,8 +102,7 @@ __END__
 
 =head1 NAME
 
-UNIVERSAL::isa - Attempt to recover from people calling UNIVERSAL::isa as a
-function
+Attempt to recover from people calling UNIVERSAL::isa as a function
 
 =head1 SYNOPSIS
 

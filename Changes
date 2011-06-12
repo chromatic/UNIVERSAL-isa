@@ -1,6 +1,9 @@
 Changes for UNIVERSAL::isa
 --------------------------
 
+{{$NEXT}}
+    - converted to Dist::Zilla
+
 1.03  Mon Jun 22 20:42:36 UTC 2009
     - improved packaging (Module::Build is now a config_requires dependency)
 

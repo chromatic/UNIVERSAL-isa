@@ -1,9 +1,0 @@
-Build.PL
-Changes
-lib/UNIVERSAL/isa.pm
-MANIFEST            This list of files
-META.yml
-t/basic.t
-t/bugs.t
-t/warnings.t
-README
