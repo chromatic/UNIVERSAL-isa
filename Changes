@@ -2,6 +2,8 @@ Changes for UNIVERSAL::isa
 --------------------------
 
 {{$NEXT}}
+
+1.20110613 2011-06-13 14:16:04 America/Los_Angeles
     - converted to Dist::Zilla
 
 1.03  Mon Jun 22 20:42:36 UTC 2009
