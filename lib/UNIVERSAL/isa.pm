@@ -102,7 +102,7 @@ __END__
 
 =head1 NAME
 
-Attempt to recover from people calling UNIVERSAL::isa as a function
+UNIVERSAL::isa - recover from people calling UNIVERSAL::isa as a function
 
 =head1 SYNOPSIS
 
@@ -128,6 +128,9 @@ the appropriate method on those objects
 
 In all other cases, the real C<UNIVERSAL::isa> gets called directly.
 
+B<NOTE:> You should use this module only for debugging purposes. It does not
+belong as a dependency in running code.
+
 =head1 WARNINGS
 
 If the lexical warnings pragma is available, this module will emit a warning
@@ -152,6 +155,8 @@ usually suggest proper fixes.
 
 =head1 SEE ALSO
 
+L<Perl::Critic::Policy::BuiltinFunctions::ProhibitUniversalIsa>
+
 L<UNIVERSAL::can> for another discussion of the problem at hand.
 
 L<Test::MockObject> for one example of a module that really needs to override
@@ -170,6 +175,6 @@ Yuval Kogman <nothingmuch@woobling.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Artistic Licence 2.0, (c) 2005 - 2009.
+Artistic Licence 2.0, (c) 2005 - 2011.
 
 =cut
