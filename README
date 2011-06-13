@@ -1,0 +1,9 @@
+UNIVERSAL::isa
+--------------
+
+This module attempts to work around people calling UNIVERSAL::isa() as a
+function, which it is not.
+
+COPYRIGHT AND LICENCE
+
+Artistic License 2.0, Copyright (c) chromatic 2005 - 2011.
