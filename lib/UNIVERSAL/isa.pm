@@ -175,6 +175,7 @@ Yuval Kogman <nothingmuch@woobling.org>
 
 =head1 COPYRIGHT & LICENSE
 
-Artistic Licence 2.0, (c) 2005 - 2011.
+Copyright (c) 2005 - 2011, chromatic. This module is made available under the
+same terms as Perl 5.12.
 
 =cut
