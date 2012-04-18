@@ -2,8 +2,7 @@ Changes for UNIVERSAL::isa
 --------------------------
 
 {{$NEXT}}
-
-1.20110614 2011-06-14 15:30:20 America/Los_Angeles
+    - removed use_ok from tests; it's unnecessary
 
 1.20110613 2011-06-13 14:16:04 America/Los_Angeles
     - converted to Dist::Zilla

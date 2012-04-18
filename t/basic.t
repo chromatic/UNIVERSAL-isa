@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 46;
 
-BEGIN { use_ok('UNIVERSAL::isa', 'isa') };
+use UNIVERSAL::isa 'isa';
 
 use warnings;
 
