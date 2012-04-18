@@ -2,6 +2,8 @@ Changes for UNIVERSAL::isa
 --------------------------
 
 {{$NEXT}}
+
+1.20120418 2012-04-18 12:15:33 America/Los_Angeles
     - removed use_ok from tests; it's unnecessary
 
 1.20110613 2011-06-13 14:16:04 America/Los_Angeles
