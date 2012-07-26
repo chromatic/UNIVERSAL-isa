@@ -122,10 +122,16 @@ TODO: {
     local $SIG{__WARN__} = sub { $warnings .= shift };
     use warnings 'UNIVERSAL::isa';
 
+    # Broken how? -- rjbs, 2012-07-24
     local $TODO = 'Apparently broken in 5.6.x' if $] < 5.007;
 
-    ok( ! UnloadedClass->isa( 'UNIVERSAL' ),
-        'unloaded class should not inherit from UNIVERSAL' );
+    {
+        local $TODO = "UnloadedClass->isa('UNIVERSAL') fails until 5.17.2"
+            if $] < 5.017002;
+
+        ok( UnloadedClass->isa( 'UNIVERSAL' ),
+            'unloaded class should inherit from UNIVERSAL' );
+    }
     is( $warnings, '', '... and should not warn' );
 }
 
